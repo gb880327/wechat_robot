@@ -1,0 +1,4 @@
+itchat
+requests
+sanic
+Sanic-CookieSession
