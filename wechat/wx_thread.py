@@ -72,7 +72,7 @@ class WxThead(threading.Thread):
 
         @itchat.msg_register(TEXT, isFriendChat=True)
         def text_reply(msg):
-            rep = itpk_robot(msg.Content)
+            rep = itpk_robot(msg.Content) + "[Robot]"
             itchat.send_msg(rep, msg.FromUserName)
 
         @itchat.msg_register(FRIENDS)
