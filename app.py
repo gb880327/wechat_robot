@@ -1,11 +1,12 @@
 # python3
 from sanic import Sanic, response
+from sanic.response import html
 import sanic_cookiesession
 from wechat.wx_thread import WxThead
-from wechat.wx_status import WxStatus, Status
+from wechat.wx_status import WxStatus
 
 app = Sanic(__name__)
-app.static("/", "./page")
+# app.static("/", "./page")
 app.config['SESSION_COOKIE_SECRET_KEY'] = 'rookie'
 sanic_cookiesession.setup(app)
 wx_status = WxStatus()
@@ -13,7 +14,7 @@ wx_status = WxStatus()
 
 @app.route("/")
 async def index(request):
-    return response.redirect("/index.html")
+    return html(open('./page/index.html').read())
 
 
 @app.route("/login")
