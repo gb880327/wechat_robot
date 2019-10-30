@@ -20,6 +20,10 @@ class WxThead(threading.Thread):
         self.waitForConfirm = False
 
     def run(self):
+        self.login()
+        itchat.run()
+
+    def login(self):
         def exit_callback():
             if os.path.exists(self.qr_path):
                 os.remove(self.qr_path)
@@ -54,6 +58,7 @@ class WxThead(threading.Thread):
         uuid = open_qr()
         while 1:
             status = itchat.check_login(uuid)
+            print("========" + status + "========")
             if status == '200':
                 self.wx.update(Status.success)
                 break
@@ -79,6 +84,3 @@ class WxThead(threading.Thread):
         def friend_reply(msg):
             itchat.add_friend(**msg['Text'])
             self.wx.new_friends.append(msg)
-
-        itchat.auto_login(hotReload=True)
-        itchat.run()
