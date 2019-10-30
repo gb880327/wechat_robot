@@ -17,6 +17,11 @@ async def index(request):
     return html(open('./page/index.html').read())
 
 
+@app.route("/favicon.ico")
+async def ico(request):
+    return html(open('./page/favicon.ico').read())
+
+
 @app.route("/jquery.min.js")
 async def jquery(request):
     return html(open('./page/jquery.min.js').read())
