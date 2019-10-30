@@ -17,6 +17,11 @@ async def index(request):
     return html(open('./page/index.html').read())
 
 
+@app.route("/jquery.min.js")
+async def jquery(request):
+    return html(open('./page/jquery.min.js').read())
+
+
 @app.route("/login")
 async def start_wecaht(request):
     wxthread = WxThead(wx_status)
