@@ -11,6 +11,10 @@ app.config['SESSION_COOKIE_SECRET_KEY'] = 'rookie'
 sanic_cookiesession.setup(app)
 wx_status = WxStatus()
 
+wxthread = WxThead(wx_status)
+wxthread.setDaemon(True)
+wxthread.start()
+
 
 @app.exception(NotFound)
 async def ignore(request, exception):
@@ -24,9 +28,6 @@ async def index(request):
 
 @app.route("/login")
 async def start_wecaht(request):
-    wxthread = WxThead(wx_status)
-    wxthread.setDaemon(True)
-    wxthread.start()
     return response.text("susscess")
 
 
