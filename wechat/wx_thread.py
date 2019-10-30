@@ -80,4 +80,5 @@ class WxThead(threading.Thread):
             itchat.add_friend(**msg['Text'])
             self.wx.new_friends.append(msg)
 
+        itchat.auto_login(hotReload=True)
         itchat.run()
