@@ -1,30 +1,25 @@
 # python3
-from sanic import Sanic, response
-from sanic.response import html
 import sanic_cookiesession
-from wechat.wx_thread import WxThead
+from sanic import Sanic, response
+from sanic.exceptions import NotFound
 from wechat.wx_status import WxStatus
+from wechat.wx_thread import WxThead
 
 app = Sanic(__name__)
-# app.static("/", "./page")
+app.static("/", "./page")
 app.config['SESSION_COOKIE_SECRET_KEY'] = 'rookie'
 sanic_cookiesession.setup(app)
 wx_status = WxStatus()
 
 
+@app.exception(NotFound)
+async def ignore(request, exception):
+    return response.text("Yep, I totally found the page: {}".format(request.url))
+
+
 @app.route("/")
 async def index(request):
-    return html(open('./page/index.html').read())
-
-
-@app.route("/favicon.ico")
-async def ico(request):
-    return html(open('./page/favicon.ico').read())
-
-
-@app.route("/jquery.min.js")
-async def jquery(request):
-    return html(open('./page/jquery.min.js').read())
+    return response.redirect("/index.html")
 
 
 @app.route("/login")
