@@ -35,4 +35,4 @@ def get_qrcode(request):
     return response.json({"status": wx_status.get().value[0], "info": wx_status.userInfo})
 
 
-app.run(host="127.0.0.1", port=8888)
+app.run(host="127.0.0.1", port=8888, access_log=False)
