@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 def itpk_robot(question: str):
@@ -16,5 +17,11 @@ def itpk_robot(question: str):
         "type": "普通文本"
     })
     if rep.status_code == 200:
-        return rep.text
-    return ""
+        try:
+            json_msg = json.loads(rep.text.encode("UTF-8"))
+            msg = ""
+            for (k, v) in json_msg.items():
+                msg += v + '\n----------------------------'
+            return msg
+        except ValueError:
+            return rep.text
