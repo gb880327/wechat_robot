@@ -7,7 +7,7 @@ import itchat
 from itchat.content import *
 from sanic.log import logger
 
-from wechat.robot import itpk_robot
+from wechat.robot import robot
 from .wx_status import WxStatus, Status
 
 
@@ -77,7 +77,7 @@ class WxThead(threading.Thread):
 
         @itchat.msg_register(TEXT, isFriendChat=True)
         def text_reply(msg):
-            rep = itpk_robot(msg.Content) + "[智能管家]"
+            rep = robot(msg.Content) + "[智能管家]"
             itchat.send_msg(rep, msg.FromUserName)
 
         @itchat.msg_register(FRIENDS)

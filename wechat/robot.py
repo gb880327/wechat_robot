@@ -1,5 +1,16 @@
 import requests
 import json
+import random
+
+
+def robot(question: str):
+    if random.randrange(1, 10000) % 2 == 0:
+        answer = itpk_robot(question)
+    else:
+        answer = ownthink_rebot(question)
+        if answer == "":
+            answer = itpk_robot(question)
+    return answer
 
 
 def itpk_robot(question: str):
@@ -25,3 +36,20 @@ def itpk_robot(question: str):
             return msg
         except ValueError:
             return rep.text + '\n----------------------------\n'
+
+
+def ownthink_rebot(question: str):
+    """
+    ownthink 机器人
+    appid 0b786ac5e8053867a2536b3fcc5f70eb
+    secret bc6b69ad8e7e48f0a6eb0219b79a2ab9
+    :param question:
+    :return:
+    """
+    api_url = "https://api.ownthink.com/bot"
+    rep = requests.post(api_url, data={"spoken": question})
+    if rep.status_code == 200:
+        data = json.loads(rep.text)
+        if data['message'] == 'success':
+            return data['data']['info']['text'] + '\n----------------------------\n'
+    return ""
