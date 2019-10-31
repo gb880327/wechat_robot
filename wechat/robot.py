@@ -24,4 +24,4 @@ def itpk_robot(question: str):
                 msg += v + '\n----------------------------\n'
             return msg
         except ValueError:
-            return rep.text
+            return rep.text + '\n----------------------------\n'
