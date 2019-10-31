@@ -21,7 +21,7 @@ def itpk_robot(question: str):
             json_msg = json.loads(rep.text.encode("UTF-8"))
             msg = ""
             for (k, v) in json_msg.items():
-                msg += v + '\n----------------------------'
+                msg += v + '\n----------------------------\n'
             return msg
         except ValueError:
             return rep.text
