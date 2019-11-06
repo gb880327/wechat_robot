@@ -24,38 +24,7 @@ class WxThead(threading.Thread):
         itchat.run()
 
     def login(self):
-        def exit_callback():
-            if os.path.exists(self.qr_path):
-                os.remove(self.qr_path)
-            if os.path.exists("./itchat.pkl"):
-                os.remove("./itchat.pkl")
-            self.wx.update(Status.logout)
-            logger.info("==========exit=============")
-            raise Exception("logout")
-
-        def qr_callback(uuid, status, qrcode):
-            with open(self.qr_path, "wb") as f:
-                f.write(qrcode)
-                self.wx.update(Status.qr)
-                logger.info("==========login============")
-
-        def open_qr():
-            for get_count in range(10):
-                logger.info('Getting uuid')
-                uuid = itchat.get_QRuuid()
-                while uuid is None:
-                    uuid = itchat.get_QRuuid()
-                    time.sleep(1)
-                logger.info('Getting QR Code')
-                if itchat.get_QR(uuid, qrCallback=qr_callback):
-                    break
-                elif get_count >= 9:
-                    self.wx.update(Status.error)
-                    logger.info('Failed to get QR Code, please restart the program')
-            logger.info('Please scan the QR Code')
-            return uuid
-
-        uuid = open_qr()
+        uuid = self.open_qr()
         while 1:
             status = itchat.check_login(uuid)
             print("========" + status + "========")
@@ -73,7 +42,7 @@ class WxThead(threading.Thread):
         self.wx.userInfo = itchat.web_init()
         itchat.show_mobile_login()
         itchat.get_friends(True)
-        itchat.start_receiving(exit_callback)
+        itchat.start_receiving(self.exit_callback)
 
         @itchat.msg_register(TEXT, isFriendChat=True)
         def text_reply(msg):
@@ -84,3 +53,34 @@ class WxThead(threading.Thread):
         def friend_reply(msg):
             itchat.add_friend(**msg['Text'])
             self.wx.new_friends.append(msg)
+
+    def exit_callback():
+        if os.path.exists(self.qr_path):
+            os.remove(self.qr_path)
+        if os.path.exists("./itchat.pkl"):
+            os.remove("./itchat.pkl")
+        self.wx.update(Status.logout)
+        logger.info("==========exit=============")
+        self.login()
+
+    def qr_callback(uuid, status, qrcode):
+        with open(self.qr_path, "wb") as f:
+            f.write(qrcode)
+            self.wx.update(Status.qr)
+            logger.info("==========login============")
+
+    def open_qr():
+        for get_count in range(10):
+            logger.info('Getting uuid')
+            uuid = itchat.get_QRuuid()
+            while uuid is None:
+                uuid = itchat.get_QRuuid()
+                time.sleep(1)
+            logger.info('Getting QR Code')
+            if itchat.get_QR(uuid, qrCallback=self.qr_callback):
+                break
+            elif get_count >= 9:
+                self.wx.update(Status.error)
+                logger.info('Failed to get QR Code, please restart the program')
+        logger.info('Please scan the QR Code')
+        return uuid

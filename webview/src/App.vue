@@ -39,9 +39,11 @@ export default {
           case 4:
             this.isSuccess = false;
             this.qr_src = "";
-            this.time = setInterval(function() {
-              _this.checkStatus();
-            }, 3000);
+            if(this.time == ""){
+                 this.time = setInterval(function() {
+                  _this.checkStatus();
+                }, 3000);
+            }
             break;
           case 1:
             this.qr_src = "";
@@ -51,6 +53,7 @@ export default {
             this.isSuccess = true;
             this.nickName = data.info.User.NickName;
             clearInterval(this.time);
+            this.time = "";
             break;
         }
       });
