@@ -18,7 +18,8 @@ export default {
       isSuccess: false,
       qr_src: "",
       nickName: "",
-      time: ""
+      time: "",
+      refreshQr:""
     };
   },
   created() {
@@ -48,8 +49,12 @@ export default {
           case 1:
             this.qr_src = "";
             this.qr_src = "/qrcode.png";
+            this.refreshQr = setInterval(function() {
+                  _this.qr_src = "/qrcode.png?v="+new Date().getTime();
+                }, 3000);
             break;
           case 3:
+            clearInterval(this.refreshQr);
             this.isSuccess = true;
             this.nickName = data.info.User.NickName;
             clearInterval(this.time);
